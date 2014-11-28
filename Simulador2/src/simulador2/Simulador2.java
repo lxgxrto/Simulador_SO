@@ -222,7 +222,7 @@ public class Simulador2 extends JFrame implements Runnable {
         int mem = Integer.parseInt(memoria_total.getText());
         for (int i = 0; i < 3; i++) {
             String nombre;
-            Map<Double,Double> puntos;
+            Map<Double,Double> puntos = null;
             if (i == 0) {
                 ajuste = new PrimerAjuste(mem);
                 nombre ="Primer Ajuste"; 
@@ -242,19 +242,29 @@ public class Simulador2 extends JFrame implements Runnable {
                     nuevo = lista.nuevo();
                 ajuste.cargar(nuevo, tiempo_ejecucion);
                 if(tiempo_ejecucion%puntoX == 0)
-                    
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                 if (--tiempo_ejecucion == 0) break;
                 actual = ajuste.siguienteListo();
                 if (actual != null) {
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if (--tiempo_ejecucion == 0) break;
                     actual.cuanto -= cuanto_sistema;
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if ((tiempo_ejecucion -= cuanto_sistema) <= 0) break;
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if (--tiempo_ejecucion == 0) break;
                     if (actual.cuanto <= 0) {
                         ajuste.descargar(actual,tiempo_ejecucion);
+                        if(tiempo_ejecucion%puntoX == 0)
+                        puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                         if (--tiempo_ejecucion == 0) break;
                         ajuste.condensar();
                         if (ajuste.condensa) {
+                            if(tiempo_ejecucion%puntoX == 0)
+                            puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                             if (--tiempo_ejecucion == 0) break;
                         }
                     } else {
@@ -266,6 +276,8 @@ public class Simulador2 extends JFrame implements Runnable {
         estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
         estado.append("Tiempo medio de atencion a procesos: " + (ajuste.media_atendidos/ajuste.total_atendidos));
         estado.append("\nTiempo medio: " + ajuste.media_atendidos);
+        if(tiempo_ejecucion%puntoX == 0)
+            puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
         
         //final LineChart grafica = new LineChart("Fragmentación");
         }
