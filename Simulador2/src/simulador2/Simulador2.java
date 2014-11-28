@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import memoria.*;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -273,13 +274,15 @@ public class Simulador2 extends JFrame implements Runnable {
                 }  
                 
             }
-        estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
+        /*estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
         estado.append("Tiempo medio de atencion a procesos: " + (ajuste.media_atendidos/ajuste.total_atendidos));
-        estado.append("\nTiempo medio: " + ajuste.media_atendidos);
-        if(tiempo_ejecucion%puntoX == 0)
-            puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
+        estado.append("\nTiempo medio: " + ajuste.media_atendidos);*/
+        puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
         
         final LineChart grafica = new LineChart("Fragmentación", puntos, nombre);
+        grafica.pack();
+        RefineryUtilities.centerFrameOnScreen(grafica);
+        grafica.setVisible(true);
         }
         
     }
