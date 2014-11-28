@@ -207,12 +207,20 @@ public class Simulador2 extends JFrame implements Runnable {
         Ajuste ajuste = new Ajuste(0);
         int mem = Integer.parseInt(memoria_total.getText());
         for (int i = 0; i < 3; i++) {
+            String nombre;
+            Map<Double,Double> puntos;
             if (i == 0) {
                 ajuste = new PrimerAjuste(mem);
+                nombre ="Primer Ajuste"; 
+                puntos = new HashMap<>();
             } else if (i == 1) {
                 ajuste = new MejorAjuste(mem);
+                nombre ="Mejor Ajuste";
+                puntos = new HashMap<>();
             } else if (i == 2) {
                 ajuste = new PeorAjuste(mem);
+                nombre ="Peor Ajuste";
+                puntos = new HashMap<>();
             }
             while (tiempo_ejecucion > 0) {
                 Proceso nuevo = ajuste.aux;
@@ -242,6 +250,8 @@ public class Simulador2 extends JFrame implements Runnable {
         estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
         estado.append("Tiempo medio de atencion a procesos: " + (ajuste.media_atendidos/ajuste.total_atendidos));
         estado.append("\nTiempo medio: " + ajuste.media_atendidos);
+        
+        //final LineChart grafica = new LineChart("Fragmentación");
         }
         
     }
