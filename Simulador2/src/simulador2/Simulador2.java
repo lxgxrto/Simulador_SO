@@ -207,7 +207,7 @@ public class Simulador2 extends JFrame implements Runnable {
                 cont++;
         }
         if(cont != 0)
-            return porcentaje/cont;
+            return porcentaje/ajuste.tam_memoria*100;
         return 0.0;
     }
     
@@ -224,6 +224,7 @@ public class Simulador2 extends JFrame implements Runnable {
         for (int i = 0; i < 3; i++) {
             String nombre = null;
             Map<Double,Double> puntos = null;
+            lista.setInicio();
             if (i == 0) {
                 ajuste = new PrimerAjuste(mem);
                 nombre ="Primer Ajuste"; 
@@ -237,6 +238,7 @@ public class Simulador2 extends JFrame implements Runnable {
                 nombre ="Peor Ajuste";
                 puntos = new HashMap<>();
             }
+            tiempo_ejecucion = Integer.parseInt(tiempo_total.getText());
             while (tiempo_ejecucion > 0) {
                 Proceso nuevo = ajuste.aux;
                 if(!ajuste.espera)
@@ -274,9 +276,9 @@ public class Simulador2 extends JFrame implements Runnable {
                 }  
                 
             }
-        /*estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
+        estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
         estado.append("Tiempo medio de atencion a procesos: " + (ajuste.media_atendidos/ajuste.total_atendidos));
-        estado.append("\nTiempo medio: " + ajuste.media_atendidos);*/
+        estado.append("\nSumatoria de tiempo en memoria de los proceso: " + ajuste.media_atendidos);
         puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
         
         final LineChart grafica = new LineChart("Fragmentación", puntos, nombre);
