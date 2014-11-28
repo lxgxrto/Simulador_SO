@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import memoria.*;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -198,40 +199,76 @@ public class Simulador2 extends JFrame implements Runnable {
         
     }
     
+    private double porcentajeFragmentado(Ajuste ajuste){
+        double porcentaje = 0;
+        int cont=0;
+        for(int i = 0; i < ajuste.mem_sis.size()-1; i++){
+            if(ajuste.mem_sis.get(i).id == 0)
+                porcentaje+=ajuste.mem_sis.get(i).memoria;
+                cont++;
+        }
+        if(cont != 0)
+            return porcentaje/ajuste.tam_memoria*100;
+        return 0.0;
+    }
+    
     public void comparativaAlgoritmos(){
         int tiempo_ejecucion = Integer.parseInt(tiempo_total.getText());
         int cuanto_sistema = Integer.parseInt(cuantos_sistema.getText());
         int tam_proceso = Integer.parseInt(memoria_proceso.getText());
         int c_proceso = Integer.parseInt(cuanto_proceso.getText());
         lista = new Listado(tiempo_ejecucion, c_proceso, tam_proceso,0);
+        int puntoX = tiempo_ejecucion/100;
         Proceso actual = new Proceso(0, 0, 0);
         Ajuste ajuste = new Ajuste(0);
         int mem = Integer.parseInt(memoria_total.getText());
         for (int i = 0; i < 3; i++) {
+            String nombre = null;
+            Map<Double,Double> puntos = null;
+            lista.setInicio();
             if (i == 0) {
                 ajuste = new PrimerAjuste(mem);
+                nombre ="Primer Ajuste"; 
+                puntos = new HashMap<>();
             } else if (i == 1) {
                 ajuste = new MejorAjuste(mem);
+                nombre ="Mejor Ajuste";
+                puntos = new HashMap<>();
             } else if (i == 2) {
                 ajuste = new PeorAjuste(mem);
+                nombre ="Peor Ajuste";
+                puntos = new HashMap<>();
             }
+            tiempo_ejecucion = Integer.parseInt(tiempo_total.getText());
             while (tiempo_ejecucion > 0) {
                 Proceso nuevo = ajuste.aux;
                 if(!ajuste.espera)
                     nuevo = lista.nuevo();
                 ajuste.cargar(nuevo, tiempo_ejecucion);
+                if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                 if (--tiempo_ejecucion == 0) break;
                 actual = ajuste.siguienteListo();
                 if (actual != null) {
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if (--tiempo_ejecucion == 0) break;
                     actual.cuanto -= cuanto_sistema;
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if ((tiempo_ejecucion -= cuanto_sistema) <= 0) break;
+                    if(tiempo_ejecucion%puntoX == 0)
+                    puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                     if (--tiempo_ejecucion == 0) break;
                     if (actual.cuanto <= 0) {
                         ajuste.descargar(actual,tiempo_ejecucion);
+                        if(tiempo_ejecucion%puntoX == 0)
+                        puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                         if (--tiempo_ejecucion == 0) break;
                         ajuste.condensar();
                         if (ajuste.condensa) {
+                            if(tiempo_ejecucion%puntoX == 0)
+                            puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
                             if (--tiempo_ejecucion == 0) break;
                         }
                     } else {
@@ -242,7 +279,13 @@ public class Simulador2 extends JFrame implements Runnable {
             }
         estado.append("\nTotal de procesos atendidos: " + ajuste.total_atendidos + "\n");
         estado.append("Tiempo medio de atencion a procesos: " + (ajuste.media_atendidos/ajuste.total_atendidos));
-        estado.append("\nTiempo medio: " + ajuste.media_atendidos);
+        estado.append("\nSumatoria de tiempo en memoria de los proceso: " + ajuste.media_atendidos);
+        puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
+        
+        final LineChart grafica = new LineChart("Fragmentación", puntos, nombre);
+        grafica.pack();
+        RefineryUtilities.centerFrameOnScreen(grafica);
+        grafica.setVisible(true);
         }
         
     }
@@ -268,7 +311,6 @@ public class Simulador2 extends JFrame implements Runnable {
         memoria_proceso.setText("");
         a1.setSelected(true);
         estado.setText("");
-        
     }
     
     

@@ -15,6 +15,11 @@ public class Listado {
     PrintWriter escritor;
     Random rand;
     int pos;
+    
+    public void setInicio(){
+        pos=0;
+    }
+    
     public Listado(int tam, int cuanto_proceso, int tam_proceso,int p){
         rand = new Random();
         pos = p;
