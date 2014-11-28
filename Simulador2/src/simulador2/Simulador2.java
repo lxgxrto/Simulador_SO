@@ -221,7 +221,7 @@ public class Simulador2 extends JFrame implements Runnable {
         Ajuste ajuste = new Ajuste(0);
         int mem = Integer.parseInt(memoria_total.getText());
         for (int i = 0; i < 3; i++) {
-            String nombre;
+            String nombre = null;
             Map<Double,Double> puntos = null;
             if (i == 0) {
                 ajuste = new PrimerAjuste(mem);
@@ -279,7 +279,7 @@ public class Simulador2 extends JFrame implements Runnable {
         if(tiempo_ejecucion%puntoX == 0)
             puntos.put((double)tiempo_ejecucion, porcentajeFragmentado(ajuste));
         
-        //final LineChart grafica = new LineChart("Fragmentación");
+        final LineChart grafica = new LineChart("Fragmentación", puntos, nombre);
         }
         
     }
