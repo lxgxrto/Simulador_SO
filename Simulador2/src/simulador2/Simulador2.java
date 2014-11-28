@@ -197,12 +197,26 @@ public class Simulador2 extends JFrame implements Runnable {
         
     }
     
+    private double porcentajeFragmentado(Ajuste ajuste){
+        double porcentaje = 0;
+        int cont=0;
+        for(int i = 0; i < ajuste.mem_sis.size()-1; i++){
+            if(ajuste.mem_sis.get(i).id == 0)
+                porcentaje+=ajuste.mem_sis.get(i).memoria;
+                cont++;
+        }
+        if(cont != 0)
+            return porcentaje/cont;
+        return 0.0;
+    }
+    
     public void comparativaAlgoritmos(){
         int tiempo_ejecucion = Integer.parseInt(tiempo_total.getText());
         int cuanto_sistema = Integer.parseInt(cuantos_sistema.getText());
         int tam_proceso = Integer.parseInt(memoria_proceso.getText());
         int c_proceso = Integer.parseInt(cuanto_proceso.getText());
         lista = new Listado(tiempo_ejecucion, c_proceso, tam_proceso,0);
+        int puntoX = tiempo_ejecucion/100;
         Proceso actual = new Proceso(0, 0, 0);
         Ajuste ajuste = new Ajuste(0);
         int mem = Integer.parseInt(memoria_total.getText());
@@ -227,6 +241,8 @@ public class Simulador2 extends JFrame implements Runnable {
                 if(!ajuste.espera)
                     nuevo = lista.nuevo();
                 ajuste.cargar(nuevo, tiempo_ejecucion);
+                if(tiempo_ejecucion%puntoX == 0)
+                    
                 if (--tiempo_ejecucion == 0) break;
                 actual = ajuste.siguienteListo();
                 if (actual != null) {
