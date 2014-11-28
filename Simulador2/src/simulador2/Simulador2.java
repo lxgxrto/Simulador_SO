@@ -139,6 +139,7 @@ public class Simulador2 extends JFrame implements Runnable {
         } else if (a3.isSelected()) {
             ajuste = new PeorAjuste(mem);
         }
+        estado.setText("");
         while (tiempo_ejecucion > 0) {
             calculaPuntos(ajuste, memoria_desf.getGraphics());
             try {
@@ -267,6 +268,7 @@ public class Simulador2 extends JFrame implements Runnable {
         memoria_proceso.setText("");
         a1.setSelected(true);
         estado.setText("");
+        
     }
     
     
@@ -299,8 +301,10 @@ public class Simulador2 extends JFrame implements Runnable {
             public void mouseClicked(MouseEvent e) {
                 if(!validar())
                     JOptionPane.showMessageDialog(Simulador2.this, "Hay almenos un campo vacio");
-                else    
-                    hilo.start();
+                else
+                    hilo = new Thread(Simulador2.this, "");
+                hilo.start();
+                
             }
         });
         comparativa.addMouseListener(new MouseAdapter() {
